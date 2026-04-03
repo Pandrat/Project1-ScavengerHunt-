@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to photo library to attach photos to scavenger hunt tasks</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs location access to show where your photos were taken</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to take photos for tasks</string>
+	<key>CFBundleURLTypes</key>
+	<array/>
+</dict>
+</plist>
