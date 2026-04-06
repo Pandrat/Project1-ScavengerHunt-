@@ -31,17 +31,13 @@ struct TaskListView: View {
                             .padding(.top, 8)
                         
                         ForEach(customTasks) { task in
-                            NavigationLink(destination: TaskDetailView(task: task, onTaskUpdated: {
+                            NavigationLink(destination: TaskDetailView(task: task, viewModel: viewModel, onTaskUpdated: {
                                 refreshID = UUID()
                                 viewModel.loadTasks()
                             })) {
-                                
                                 TaskBubbleView(task: task)
-                                
                             }
-                            
                             .buttonStyle(PlainButtonStyle())
-                            
                         }
                         
                     }
@@ -51,25 +47,18 @@ struct TaskListView: View {
                     if !defaultTasks.isEmpty {
                         
                         if !customTasks.isEmpty {
-                            
                             SectionHeader(title: "Photo Scavenger Hunt Tasks", icon: "map.fill")
-                            
                         }
                         
                         ForEach(defaultTasks) { task in
-                            NavigationLink(destination: TaskDetailView(task: task, onTaskUpdated: {
+                            NavigationLink(destination: TaskDetailView(task: task, viewModel: viewModel, onTaskUpdated: {
                                 refreshID = UUID()
                                 viewModel.loadTasks()
                             })) {
-                                
                                 TaskBubbleView(task: task)
-                                
                             }
-                            
                             .buttonStyle(PlainButtonStyle())
-                            
                         }
-                        
                     }
                     
                 }

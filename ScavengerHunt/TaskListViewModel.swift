@@ -86,8 +86,7 @@ class TaskListViewModel: ObservableObject {
                     isCompleted: customTaskData.isCompleted
                 )
                 
-                // Load photo data if exists
-                //i got to make sure all of the pictures have data
+                // Load photo data if exists - THIS WAS MISSING
                 if customTaskData.isCompleted {
                     
                     if let photoData = userDefaults.data(forKey: "photoData_\(task.id.uuidString)") {
@@ -102,8 +101,6 @@ class TaskListViewModel: ObservableObject {
                     
                 }
                 
-                // Only add if not already in tasks
-                //just in case tasks just in case
                 if !tasks.contains(where: { $0.id == task.id }) {
                     
                     tasks.append(task)
@@ -116,7 +113,7 @@ class TaskListViewModel: ObservableObject {
         
     }
     
-    private func saveCustomTasks() {
+    func saveCustomTasks() {
         
         let customTasks = tasks.filter { $0.isCustom }
         let customTasksData = customTasks.map { task in
@@ -124,7 +121,9 @@ class TaskListViewModel: ObservableObject {
                 id: task.id,
                 title: task.title,
                 description: task.description,
-                isCompleted: task.isCompleted
+                isCompleted: task.isCompleted,
+                hasPhotoData: task.photoData != nil,
+                hasLocationData: task.photoLocation != nil
             )
             
         }
@@ -333,9 +332,12 @@ class TaskListViewModel: ObservableObject {
 // Codable struct for saving custom tasks
 //this bit finally works thank GOD
 struct CustomTaskData: Codable {
+    
     let id: UUID
     let title: String
     let description: String
     let isCompleted: Bool
+    let hasPhotoData: Bool
+    let hasLocationData: Bool
     
 }

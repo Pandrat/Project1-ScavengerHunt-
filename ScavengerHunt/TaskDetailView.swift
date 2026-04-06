@@ -12,6 +12,7 @@ struct TaskDetailView: View {
     
     let task: Task
     let onTaskUpdated: () -> Void
+    var viewModel: TaskListViewModel? = nil
     @State private var showingPhotoPicker = false
     @State private var selectedImage: UIImage?
     @State private var imageLocation: CLLocationCoordinate2D?
@@ -20,15 +21,14 @@ struct TaskDetailView: View {
     @State private var showingLocationAlert = false
     @State private var showCompletionAnimation = false
     
-    init(task: Task, onTaskUpdated: @escaping () -> Void) {
+    init(task: Task, viewModel: TaskListViewModel? = nil, onTaskUpdated: @escaping () -> Void) {
         
         self.task = task
         self.onTaskUpdated = onTaskUpdated
+        self.viewModel = viewModel
         _currentTask = State(initialValue: task)
         
         // Default region
-        //having a default in case i forgot to add the location info
-        //precaution when debugging
         let defaultLocation = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
         _region = State(initialValue: MKCoordinateRegion(
             center: task.photoLocation ?? defaultLocation,
@@ -296,33 +296,31 @@ struct TaskDetailView: View {
         var completedIDs = userDefaults.array(forKey: "completedTaskIDs") as? [String] ?? []
         
         if !completedIDs.contains(currentTask.id.uuidString) {
-            
             completedIDs.append(currentTask.id.uuidString)
-            
         }
         
         // Save the photo data
         if let photoData = currentTask.photoData {
-            
             userDefaults.set(photoData, forKey: "photoData_\(currentTask.id.uuidString)")
-            
         }
         
         // Save location
         if let location = currentTask.photoLocation {
-            
             let locationDict = ["latitude": location.latitude, "longitude": location.longitude]
             userDefaults.set(locationDict, forKey: "photoLocation_\(currentTask.id.uuidString)")
-            
         }
         
         userDefaults.set(completedIDs, forKey: "completedTaskIDs")
         userDefaults.synchronize()
         
-        // Notify that task was updated but don't navigate back
-        //should've made it naviagte back but i was having issues with it
-        onTaskUpdated()
         
+        // If this is a custom task, save it to the custom tasks list
+        if currentTask.isCustom, let viewModel = viewModel {
+            viewModel.saveCustomTasks()
+        }
+        
+        // Notify that task was updated
+        onTaskUpdated()
     }
     
 }
